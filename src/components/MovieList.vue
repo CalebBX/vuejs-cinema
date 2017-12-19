@@ -1,11 +1,20 @@
 <template>
     <div id="movie-list">
-        <movie-item v-for="movie in filteredMovies" v-bind:key="movie.movie.Title" v-bind:movie="movie.movie"></movie-item>
+        <div v-if="filteredMovies.length > 0">
+            <movie-item v-for="movie in filteredMovies" v-bind:key="movie.movie.Title" v-bind:movie="movie.movie"></movie-item>
+        </div>
+        <div class="no-results" v-else-if="movies.length > 0">
+            No results.
+        </div>
+        <div class="no-results" v-else>
+            Loading...
+        </div>
     </div>
 </template>
 <script>
     import genres from '../util/genres';
     import MovieItem from './MovieItem.vue';
+
     export default {
         props: ['genre', 'time', 'movies'],
         computed: {
