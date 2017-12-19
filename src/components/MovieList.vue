@@ -1,6 +1,6 @@
 <template>
     <div id="movie-list">
-        <movie-item class="movie" v-for="movie in filteredMovies" v-bind:key="movie.movie.Title" v-bind:movie="movie.movie"></movie-item>
+        <movie-item v-for="movie in filteredMovies" v-bind:key="movie.movie.Title" v-bind:movie="movie.movie"></movie-item>
     </div>
 </template>
 <script>
@@ -13,10 +13,16 @@
                 return this.movies.filter((movie) => {
                     if(this.genre.length === 0){
                         return true
-                    }
-                    return this.genre.find((genre) => {
-                        return movie.genre === genre;
-                    });
+                    } else {
+                        let movieGenres = movie.movie.Genre.split(", ");
+                        let matched = true;
+                        this.genre.forEach(genre => {
+                            if(movieGenres.indexOf(genre) === -1){
+                                matched = false;
+                            }
+                        });
+                        return matched;
+                    } 
                 });
             }
         },
