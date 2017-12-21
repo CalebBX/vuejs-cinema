@@ -5,11 +5,12 @@
                         v-bind:key="movie.movie.Title" 
                         v-bind:movie="movie.movie" 
                         v-bind:sessions="movie.sessions"
-                        v-bind:day="day">
+                        v-bind:day="day"
+                        v-bind:time="time">
             </movie-item>
         </div>
         <div class="no-results" v-else-if="movies.length > 0">
-            No results.
+            {{ noResults }}
         </div>
         <div class="no-results" v-else>
             Loading...
@@ -58,6 +59,11 @@
                     .filter((movie) => {
                         return movie.sessions.find(this.sessionPassesTimeFilter)
                     });
+            },
+            noResults(){
+                let times = this.time.join(', ');
+                let genres = this.genre.join(', ');
+                return `No results for ${times}${ times.length && genres.length ? ', ' : ''}${genres}`;
             }
         },
         components: {
