@@ -1,7 +1,7 @@
 <template>
     <div id="day-select">
         <ul class="days">
-            <li v-bind:class="{day: true, active: isActive(day)}" v-for="day in days" v-on:click="selected = day">{{ formatDay(day) }}</li>
+            <li v-bind:class="{day: true, active: isActive(day)}" v-for="day in days" v-on:click="selectDay(day)">{{ formatDay(day) }}</li>
         </ul>
     </div>
 </template>
@@ -14,7 +14,8 @@
                     return this.$moment().add(num, 'days');
                 })
             }
-        }, 
+        },
+        props: ['selected'], 
         methods: {
             formatDay(raw){
                 if(raw.isSame(this.$moment(), 'day')){
@@ -25,6 +26,10 @@
             },
             isActive(day){
                 return day.isSame(this.selected, 'day');
+            },
+            selectDay(day){
+                this.selected = day;
+                this.$bus.$emit('set-day', day);
             }
         }
     }
