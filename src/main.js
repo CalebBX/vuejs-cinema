@@ -1,22 +1,28 @@
 import Vue from 'vue';
 import './style.scss';
 
-import MovieList from './components/MovieList.vue';
-import MovieFilter from './components/MovieFilter.vue';
-
 import VueResource from 'vue-resource';
+import VueRouter from 'vue-router';
 import moment from 'moment-timezone';
+
+import { checkFilter } from './util/bus.js';
+import routes from './util/routes';
 moment.tz.setDefault("UTC");
 Object.defineProperty(Vue.prototype, '$moment', {get(){return this.$root.moment}})
 
-Vue.use(VueResource);
 
-import { checkFilter } from './util/bus.js';
+Vue.use(VueResource);
+Vue.use(VueRouter);
+
+
 const bus = new Vue();
 Object.defineProperty(Vue.prototype, '$bus', { get() {return this.$root.bus}});
 
+const router = new VueRouter({routes});
+
 new Vue({
     el: '#app',
+    router,
     data: {
         genre: [],
         time: [],
@@ -25,14 +31,11 @@ new Vue({
         day: moment(),
         bus
     },
-    components: {
-        MovieList,
-        MovieFilter
-    },
     created() {
         this.$http.get('/api').then(res => {
             this.movies = res.data;
         });
         this.$bus.$on('check-filter', checkFilter.bind(this));
     }
+
 });

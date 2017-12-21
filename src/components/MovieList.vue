@@ -1,12 +1,12 @@
 <template>
     <div id="movie-list">
         <div v-if="filteredMovies.length > 0">
-            <movie-item v-for="movie in filteredMovies" 
-                        v-bind:key="movie.movie.Title" 
-                        v-bind:movie="movie.movie" 
-                        v-bind:sessions="movie.sessions"
-                        v-bind:day="day"
-                        v-bind:time="time">
+            <movie-item v-for="movie in filteredMovies" v-bind:key="movie.movie.Title" v-bind:movie="movie.movie" >
+                <div class="movie-sessions">
+                    <div class="session-time-wrapper" v-for="session in filteredSessions(movie.sessions)">
+                        <div class="session-time">{{ formatSessionTime(session.time) }}</div>
+                    </div> 
+                </div>
             </movie-item>
         </div>
         <div class="no-results" v-else-if="movies.length > 0">
@@ -50,6 +50,12 @@
                     return this.$moment(session.time).hour() < 18;
                 }
                 return true;
+            },
+            formatSessionTime(raw){
+                return this.$moment(raw).format('h:mm A');
+            },
+            filteredSessions(sessions){
+                return sessions.filter(this.sessionPassesTimeFilter);
             }
         },
         computed: {
